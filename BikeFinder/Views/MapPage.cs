@@ -343,7 +343,7 @@ namespace BikeFinder
 		{
 			if (!isConnected)
 				return;
-			
+			MapHandler.Instance.ClearPins (map);
 			try {
 //				var temp = MapHandler.Instance.GetMap(chosen);
 //				Debug.WriteLine("Center {0}:{1}, Radius {2} miles", temp.Center.Latitude, temp.Center.Longitude, temp.Radius.Miles);
