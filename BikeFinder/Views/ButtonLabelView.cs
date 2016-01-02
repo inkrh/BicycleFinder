@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace BikeFinder
@@ -14,7 +13,7 @@ namespace BikeFinder
 		{ 
 			Clicked = new TapGestureRecognizer ();
 			Clicked.Tapped += clicked;
-			this.GestureRecognizers.Add (Clicked);
+			GestureRecognizers.Add (Clicked);
 			var fis = new FileImageSource ();
 			fis.File = imagePath;
 			BLImage = new Image ();
@@ -26,17 +25,15 @@ namespace BikeFinder
 		
 
 			BLLabel = new Label {
-					Text = buttonLabel,
+				Text = buttonLabel,
 				TextColor = Color.Black,
 				XAlign = TextAlignment.Center,
 				WidthRequest = 60,
-				//	VerticalOptions = LayoutOptions.Center,
 				HorizontalOptions = LayoutOptions.Center,
 				FontSize = 10
 			};
 
 			Content = new StackLayout {
-			//	BackgroundColor=Color.Gray,
 				Orientation = StackOrientation.Vertical,
 				WidthRequest = 60,
 				HeightRequest = 60,

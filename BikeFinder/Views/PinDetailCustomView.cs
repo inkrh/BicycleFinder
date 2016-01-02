@@ -1,6 +1,4 @@
-﻿using System;
-
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
 namespace BikeFinder
 {
@@ -117,9 +115,9 @@ namespace BikeFinder
 				HorizontalOptions = LayoutOptions.Center,
 				BackgroundColor = Color.White,
 				RowDefinitions = new RowDefinitionCollection {
-					new RowDefinition { Height = DeviceDetails.MapHeight /3 },
-					new RowDefinition { Height = DeviceDetails.MapHeight /3 },
-					new RowDefinition { Height = DeviceDetails.MapHeight /3 }
+					new RowDefinition { Height = DeviceDetails.MapHeight / 3 },
+					new RowDefinition { Height = DeviceDetails.MapHeight / 3 },
+					new RowDefinition { Height = DeviceDetails.MapHeight / 3 }
 				},
 				Children = {
 					title,
