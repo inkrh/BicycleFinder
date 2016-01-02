@@ -10,9 +10,9 @@ namespace BikeFinder
 	public class MapHandler
 	{
 
-		private static MapHandler instance;
+		static MapHandler instance;
 
-		private MapHandler ()
+		MapHandler ()
 		{
 		}
 
@@ -142,8 +142,8 @@ namespace BikeFinder
 			if (LocationHandler.Instance.CurrentLocation == new Position (0, 0)) {
 				LocationHandler.Instance.CurrentLocation = new Position (chosen.lat, chosen.lng);
 				LocationHandler.Instance.LBS = false;
-
 			}
+
 			if (LocationHandler.Instance.LBS) {
 				var l1 = LocationHandler.Instance.CurrentLocation.Latitude;
 				var lo1 = LocationHandler.Instance.CurrentLocation.Longitude;
@@ -161,6 +161,7 @@ namespace BikeFinder
 					}
 					Debug.WriteLine (i.Label);
 				}
+
 				var closest = PinDistanceDictionary.OrderBy (x => x.Value).First ().Key;
 				ClosestPin = closest;
 		

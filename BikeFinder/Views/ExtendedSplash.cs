@@ -1,8 +1,7 @@
-﻿using System;
+﻿using System.Diagnostics;
 using System.Threading.Tasks;
-using Xamarin.Forms.Maps;
 using Xamarin.Forms;
-using System.Diagnostics;
+using Xamarin.Forms.Maps;
 
 namespace BikeFinder
 {
@@ -11,6 +10,7 @@ namespace BikeFinder
 		Label status;
 		Position currentPosition;
 		Image icon;
+
 		public ExtendedSplash ()
 		{
 			icon = new Image ();
@@ -24,19 +24,18 @@ namespace BikeFinder
 
 			Content = new StackLayout { 
 				Children = {
-					icon,status
+					icon, status
 				},
 				VerticalOptions = LayoutOptions.Center,
-				Padding = new Thickness(0,20,0,0)
-					
-					
+				Padding = new Thickness (0, 20, 0, 0)
 			};
+
 			runcall ();
 		}
 
-		async void runcall() {
-
-			//try location twice
+		async void runcall ()
+		{
+			//try location twice (bug on some devices/OS versions causes first location attempt to fail)
 			status.Text = "trying location";
 			if (await location ()) {
 				status.Text = "location " + currentPosition.Latitude + ":" + currentPosition.Longitude;
@@ -49,22 +48,23 @@ namespace BikeFinder
 
 			LocationHandler.Instance.CurrentLocation = currentPosition;
 			status.Text = "getting bike networks";
-			var a = await NetworksController.Instance.GetNetworks ();
+			var networksResult = await NetworksController.Instance.GetNetworks ();
 
-			if (a != null) {
-				status.Text = "found " + a.Count + " cities";
+			if (networksResult != null) {
+				status.Text = "found " + networksResult.Count + " cities";
 			}
-			Debug.WriteLine ("Going to next page");
 
 			Application.Current.MainPage = new MapPage ();
 
 		}
 
-		async Task<bool> location() {
-			Task<Position> p = LocationHandler.Instance.GetLocation ();
+		async Task<bool> location ()
+		{
+			var locationResult = LocationHandler.Instance.GetLocation ();
+			//pushing it out for other methods(later enhancements planned)
+			currentPosition = await locationResult;
 
-			currentPosition = await p;
-			if (p.IsCanceled) {
+			if (locationResult.IsCanceled) {
 				Debug.WriteLine ("Task Cancelled");
 				currentPosition = new Position (0, 0);
 				LocationHandler.Instance.LBS = false;

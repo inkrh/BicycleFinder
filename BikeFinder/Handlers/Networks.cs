@@ -4,9 +4,9 @@ namespace BikeFinder
 {
 	public class Networks
 	{
-		private static Networks instance;
+		static Networks instance;
 
-		private Networks ()
+		Networks ()
 		{
 		}
 

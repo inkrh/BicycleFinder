@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net;
+using System.Threading.Tasks;
+using DeviceMotion.Plugin;
+using DeviceMotion.Plugin.Abstractions;
+using Plugin.Connectivity;
+using Plugin.Connectivity.Abstractions;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
-using System.Threading.Tasks;
-using DeviceMotion.Plugin.Abstractions;
-using DeviceMotion.Plugin;
-using Connectivity.Plugin.Abstractions;
-using Connectivity.Plugin;
-using System.Net;
 
 namespace BikeFinder
 {
@@ -55,13 +55,13 @@ namespace BikeFinder
 			Grid.SetRowSpan (aboutView, 2);
 			aboutView.IsVisible = false;
 
-			CrossDeviceMotion.Current.SensorValueChanged += (s, a) => Shaken (s, a);
+			CrossDeviceMotion.Current.SensorValueChanged += Shaken;
 			CrossDeviceMotion.Current.Start (MotionSensorType.Accelerometer, MotionSensorDelay.Default);
 			CrossConnectivity.Current.ConnectivityChanged += (object sender, ConnectivityChangedEventArgs e) => {
 				if (CrossConnectivity.Current.IsConnected != isConnected) {
 					if (!CrossConnectivity.Current.IsConnected) {
-						MessageBox ("Data connection lost", "Connectivity", "Ok", null);
 						//show connection lost message
+						MessageBox ("Data connection lost", "Connectivity", "Ok", null);
 					} else
 						runCall ();
 				}
@@ -80,9 +80,6 @@ namespace BikeFinder
 			mainGrid.RowSpacing = 0;
 			mainButton = new ButtonLabelView ("MainButton.png", "menu", new EventHandler ((sender, e) => showUI ()));
 
-
-		
-
 			refreshLocation = new ButtonLabelView ("Refresh.png", "refresh", new EventHandler ((sender, e) => refresh ()));
 			refreshLocation.VerticalOptions = LayoutOptions.Center;
 			refreshLocation.HorizontalOptions = LayoutOptions.End;
@@ -92,7 +89,6 @@ namespace BikeFinder
 			cityListButton.VerticalOptions = LayoutOptions.Center;
 			cityListButton.HorizontalOptions = LayoutOptions.Center;
 			Grid.SetColumn (cityListButton, 1);
-
 
 			aboutButton = new ButtonLabelView ("About.png", "about", new EventHandler ((sender, e) => showAbout ()));
 			aboutButton.VerticalOptions = LayoutOptions.Center;
@@ -106,7 +102,6 @@ namespace BikeFinder
 				HeightRequest = DeviceDetails.MapHeight - 40,
 				IsVisible = false
 			};
-
 
 			subMenuGrid = new Grid {
 				HeightRequest = DeviceDetails.TopRowHeight,
@@ -132,8 +127,6 @@ namespace BikeFinder
 			altAboutButton.VerticalOptions = LayoutOptions.Center;
 			altAboutButton.HorizontalOptions = LayoutOptions.Start;
 			Grid.SetColumn (altAboutButton, 1);
-
-
 
 			altSubMenuGrid = new Grid {
 				HeightRequest = DeviceDetails.TopRowHeight,
@@ -251,23 +244,23 @@ namespace BikeFinder
 
 			if (Networks.Instance.NetworkList != null) {
 				if (currentPosition != new Position (0, 0) && LocationHandler.Instance.LBS) {
-					var cd = new Dictionary<double,Network> ();
+					var networkDictionary = new Dictionary<double,Network> ();
 					foreach (var i in Networks.Instance.NetworkList) {
 						var n = Math.Abs (((i.lat / 1E6) - currentPosition.Latitude) + ((i.lng / 1E6) - currentPosition.Longitude));
-						if (cd.ContainsKey (n)) {
-							cd [n] = i;
+						if (networkDictionary.ContainsKey (n)) {
+							networkDictionary [n] = i;
 						} else {
-							cd.Add (n, i);
+							networkDictionary.Add (n, i);
 						}
 					}
-					List<double> lcd = new List<double> ();
+					List<double> sortedDistance = new List<double> ();
 
-					foreach (var i in cd) {
-						lcd.Add (i.Key);
-						
+					foreach (var i in networkDictionary) {
+						sortedDistance.Add (i.Key);
 					}
-					lcd.Sort ();
-					Networks.Instance.CurrentNetwork = cd [lcd [0]];
+
+					sortedDistance.Sort ();
+					Networks.Instance.CurrentNetwork = networkDictionary [sortedDistance [0]];
 					PopulateTable ();
 					showMap (Networks.Instance.CurrentNetwork);
 					map.IsShowingUser = true;
@@ -282,7 +275,7 @@ namespace BikeFinder
 			}
 		}
 
-		async void CityChosen (Network cp)
+		async void CityChosen (Network chosen)
 		{
 			
 			
@@ -291,7 +284,7 @@ namespace BikeFinder
 			if (cityListStackLayout.IsVisible) {
 				cityListStackLayout.IsVisible = false;
 			}
-			Networks.Instance.CurrentNetwork = cp;
+			Networks.Instance.CurrentNetwork = chosen;
 
 			if (Networks.Instance.NetworkList == null || Networks.Instance.NetworkList.Count < 1)
 				return;
@@ -308,7 +301,6 @@ namespace BikeFinder
 
 		void PinClicked (City city)
 		{
-			
 			CrossDeviceMotion.Current.Stop (MotionSensorType.Accelerometer);
 			MapHandler.Instance.BackFromPinMapSpan = map.VisibleRegion;
 			pinDetailView.ChosenNetwork = Networks.Instance.CurrentNetwork;
@@ -316,8 +308,6 @@ namespace BikeFinder
 			pinDetailView.ChosenCity = city;
 			pinDetailView.IsVisible = true;
 			altSubMenuGrid.IsVisible = true;
-			//	var pinDetailPage = new PinDetailPage (Networks.Instance.CurrentNetwork, city);
-			//	Application.Current.MainPage = pinDetailPage;
 		}
 
 		async public void BackFromPin (Network network)
@@ -358,8 +348,7 @@ namespace BikeFinder
 
 				map.MoveToRegion (MapHandler.Instance.CalculateBoundingCoordinates (chosen, map));
 
-//				Debug.WriteLine("Map Bounds Center {0}:{1} lat{2} lon{3}",map.VisibleRegion.Center.Latitude, map.VisibleRegion.Center.Longitude, map.VisibleRegion.LatitudeDegrees, map.VisibleRegion.LongitudeDegrees);
-			} catch (Exception ex) {
+			} catch {
 
 			}
 
@@ -390,10 +379,10 @@ namespace BikeFinder
 				return;
 			
 			refreshing = aIndicator.IsVisible = true;
-			Task<Position> p = LocationHandler.Instance.GetLocation ();
+			Task<Position> refreshPosition = LocationHandler.Instance.GetLocation ();
 
-			currentPosition = await p;
-			if (p.IsCanceled) {
+			currentPosition = await refreshPosition;
+			if (refreshPosition.IsCanceled) {
 				if (isConnected) {
 					MessageBox ("Network data has been refreshed, but GPS is unavailable.", "Refresh", "Ok", null);
 				} else {
@@ -408,7 +397,6 @@ namespace BikeFinder
 					MessageBox ("Your network is currently unavailable", "Refresh", "Ok", null);
 				}
 			}
-			var a = await NetworksController.Instance.GetNetworks ();
 
 				
 			currentPosition = LocationHandler.Instance.CurrentLocation;
@@ -431,7 +419,7 @@ namespace BikeFinder
 			}
 		}
 
-		private TableRoot ResultsTableRoot ()
+		TableRoot ResultsTableRoot ()
 		{
 			var temp = new TableRoot ();
 			var tempSection = new TableSection ();

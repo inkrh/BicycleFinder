@@ -4,9 +4,9 @@ namespace BikeFinder
 {
 	public class Cities
 	{
-		private static Cities instance;
+		static Cities instance;
 
-		private Cities ()
+		Cities ()
 		{
 		}
 

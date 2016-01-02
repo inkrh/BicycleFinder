@@ -10,9 +10,9 @@ namespace BikeFinder
 {
 	public class NetworksController
 	{
-		private static NetworksController instance;
+		static NetworksController instance;
 
-		private NetworksController ()
+		NetworksController ()
 		{
 		}
 
@@ -30,12 +30,12 @@ namespace BikeFinder
 		public async Task<List<Network>> GetNetworks ()
 		{
 			try {
-				var r = await GetResponse ("http://api.citybik.es/networks.json");
-				if (r.StatusCode != HttpStatusCode.OK) {
-					Debug.WriteLine ("Failed: " + r.StatusCode.ToString ());
+				var result = await GetResponse ("http://api.citybik.es/networks.json");
+				if (result.StatusCode != HttpStatusCode.OK) {
+					Debug.WriteLine ("Failed: " + result.StatusCode.ToString ());
 					return null;
 				}
-				Networks.Instance.NetworkList = Deserialize (r.Content.ReadAsStringAsync ().Result);
+				Networks.Instance.NetworkList = Deserialize (result.Content.ReadAsStringAsync ().Result);
 				Networks.Instance.NetworkList.Sort ((x, y) => x.city.CompareTo (y.city));
 				return Networks.Instance.NetworkList;
 			} catch (Exception e) {
@@ -44,7 +44,6 @@ namespace BikeFinder
 			return null;
 		}
 
-		//TODO try/catch
 		static async Task<HttpResponseMessage> GetResponse (string url)
 		{
 			try {
@@ -58,12 +57,9 @@ namespace BikeFinder
 			}
 		}
 
-		static List<Network> Deserialize (string a)
+		static List<Network> Deserialize (string jsonString)
 		{
-
-			var n = JsonConvert.DeserializeObject<List<Network>> (a);
-			return n;
-
+			return JsonConvert.DeserializeObject<List<Network>> (jsonString);
 		}
 	}
 }

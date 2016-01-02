@@ -1,24 +1,35 @@
 ﻿using System;
-using Geolocator.Plugin;
-using System.Threading.Tasks;
-using Xamarin.Forms.Maps;
-using System.Threading;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+using Plugin.Geolocator;
+using Xamarin.Forms.Maps;
 
 namespace BikeFinder
 {
 	public class LocationHandler
 	{
-		private static LocationHandler instance;
+		static LocationHandler instance;
 
-		private LocationHandler ()
+		LocationHandler ()
 		{
 		}
 
-		Geolocator.Plugin.Abstractions.IGeolocator locator;
+		public static LocationHandler Instance {
+			get {
+				if (instance == null) {
+					instance = new LocationHandler ();
+				}
+				return instance;
+			}
+		}
+
+
+		Plugin.Geolocator.Abstractions.IGeolocator locator;
 
 		public Position CurrentLocation;
-		private bool lbs;
+
+		bool lbs;
 
 		public bool LBS {
 			get { 
@@ -32,14 +43,6 @@ namespace BikeFinder
 			}
 		}
 
-		public static LocationHandler Instance {
-			get {
-				if (instance == null) {
-					instance = new LocationHandler ();
-				}
-				return instance;
-			}
-		}
 
 		public async Task<Position> GetLocation ()
 		{
@@ -72,7 +75,6 @@ namespace BikeFinder
 			} else {
 				LBS = false;
 				return new Position (0, 0);
-
 			}
 		}
 	}
