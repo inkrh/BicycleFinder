@@ -35,7 +35,7 @@ namespace BikeFinder
 
 		TableView cityTable;
 		Map map;
-		ActivityIndicator aIndicator;
+		BusyIndicator aIndicator;
 
 		Position currentPosition;
 
@@ -67,10 +67,11 @@ namespace BikeFinder
 				}
 				isConnected = CrossConnectivity.Current.IsConnected;
 			};
-			aIndicator = new ActivityIndicator ();
+			aIndicator = new BusyIndicator ();
 			aIndicator.HorizontalOptions = LayoutOptions.Center;
 			aIndicator.VerticalOptions = LayoutOptions.Center;
-			aIndicator.Color = Color.Red;
+			aIndicator.Show = false;
+
 			mainGrid = new Grid ();
 			mainGrid.RowDefinitions = new RowDefinitionCollection {
 				new RowDefinition{ Height = DeviceDetails.MapHeight },
@@ -238,8 +239,7 @@ namespace BikeFinder
 			if (!isConnected)
 				return;
 			
-			aIndicator.IsRunning = true;
-			aIndicator.IsVisible = true;
+			aIndicator.Show = true;
 			currentPosition = LocationHandler.Instance.CurrentLocation;
 
 			if (Networks.Instance.NetworkList != null) {
@@ -264,12 +264,12 @@ namespace BikeFinder
 					PopulateTable ();
 					showMap (Networks.Instance.CurrentNetwork);
 					map.IsShowingUser = true;
-					aIndicator.IsVisible = false;
+					aIndicator.Show = false;
 
 				} else {
 					LocationHandler.Instance.LBS = false;
 					PopulateTable ();
-					aIndicator.IsVisible = false;
+					aIndicator.Show = false;
 					map.IsShowingUser = false;
 				}
 			}
@@ -279,7 +279,7 @@ namespace BikeFinder
 		{
 			
 			
-			aIndicator.IsVisible = true;
+			aIndicator.Show = true;
 
 			if (cityListStackLayout.IsVisible) {
 				cityListStackLayout.IsVisible = false;
@@ -295,7 +295,7 @@ namespace BikeFinder
 			showMap (Networks.Instance.CurrentNetwork);
 			cityListStackLayout.IsVisible = false;
 			subMenuGrid.IsVisible = false;
-			aIndicator.IsVisible = false;
+			aIndicator.Show = false;
 
 		}
 
@@ -335,15 +335,15 @@ namespace BikeFinder
 				return;
 			MapHandler.Instance.ClearPins (map);
 			try {
-//				var temp = MapHandler.Instance.GetMap(chosen);
-//				Debug.WriteLine("Center {0}:{1}, Radius {2} miles", temp.Center.Latitude, temp.Center.Longitude, temp.Radius.Miles);
 				map.MoveToRegion (MapHandler.Instance.GetMap (chosen));
 
 				var a = await CityController.Instance.GetCityData (chosen.url);
 				if (a != null) {
+					aIndicator.Show = true;
 					foreach (var c in Cities.Instance.CityData) {
 						MapHandler.Instance.DropPin (map, c.lat / 1E6, c.lng / 1E6, c);
 					}
+					aIndicator.Show = false;
 				}
 
 				map.MoveToRegion (MapHandler.Instance.CalculateBoundingCoordinates (chosen, map));
@@ -378,7 +378,7 @@ namespace BikeFinder
 			if (!isConnected)
 				return;
 			
-			refreshing = aIndicator.IsVisible = true;
+			refreshing = aIndicator.Show = true;
 			Task<Position> refreshPosition = LocationHandler.Instance.GetLocation ();
 
 			currentPosition = await refreshPosition;
@@ -403,7 +403,7 @@ namespace BikeFinder
 			runCall ();
 			subMenuGrid.IsVisible = false;
 			cityListStackLayout.IsVisible = false;
-			refreshing = aIndicator.IsVisible = false;
+			refreshing = aIndicator.Show = false;
 
 		}
 
@@ -453,7 +453,7 @@ namespace BikeFinder
 			altSubMenuGrid.IsVisible = false;
 			cityListStackLayout.IsVisible = false;
 			subMenuGrid.IsVisible = false;
-			aIndicator.IsVisible = false;
+			aIndicator.Show = false;
 			aboutView.IsVisible = false;
 			Device.OpenUri (new Uri ("http://citybik.es"));
 		}

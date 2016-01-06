@@ -1,12 +1,6 @@
 ﻿<Properties StartupItem="iOS/BikeFinder.iOS.csproj" RefactoringSettings.EnableRefactorings="True">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.IPhone6s.9.2" />
-  <MonoDevelop.Ide.Workbench>
-    <Files>
-      <File FileName="BikeFinder/Views/TempPage.cs" Line="1" Column="1" />
-      <File FileName="BikeFinder/BikeFinder.cs" Line="1" Column="1" />
-      <File FileName="BikeFinder/Views/ExtendedSplash.cs" Line="1" Column="1" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.Robert's iPhone" />
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
