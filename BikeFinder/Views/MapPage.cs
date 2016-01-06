@@ -157,7 +157,7 @@ namespace BikeFinder
 			subMenuGrid.IsVisible = false;
 			altSubMenuGrid.IsVisible = false;
 
-			MapSpan initialSpan = new MapSpan (new Position (0, 0), 360, 360);
+			MapSpan initialSpan = new MapSpan (LocationHandler.Instance.CurrentLocation, 360, 360);
 			map = new Map (initialSpan);
 
 			Grid.SetRow (cityListStackLayout, 0);
