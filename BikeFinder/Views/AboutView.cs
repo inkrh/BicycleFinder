@@ -15,7 +15,7 @@ namespace BikeFinder
 		{
 			citybikes = new Button {
 				WidthRequest = DeviceDetails.Width - 80,
-				Text = "http://citybik.es",
+				Text = Constants.CityBikesURL,
 				FontSize = 16,
 				FontAttributes = FontAttributes.Bold,
 				HorizontalOptions = LayoutOptions.Center,
@@ -25,7 +25,7 @@ namespace BikeFinder
 			citybikes.Clicked += (object sender, EventArgs e) => openCityBikes ();
 			title = new Label {
 				WidthRequest = DeviceDetails.Width - 80,
-				Text = "BicycleFinder",
+				Text = Constants.Title,
 				FontSize = 16,
 				FontAttributes = FontAttributes.Bold,
 				HorizontalOptions = LayoutOptions.Center,
@@ -34,7 +34,7 @@ namespace BikeFinder
 
 			aboutText = new Label {
 				WidthRequest = DeviceDetails.Width - 80,
-				Text = "BicycleFinder provides information on public bike stations around the world. \n\nIt uses the user's location if available to show the nearest bike stations. If no location information is available, or if there is no city bike network near you, BicycleFinder still allows you to choose from available cities in the city bikes network.\n\nUsers can find routes to their chosen bike station using the iOS map feature.",
+				Text = Constants.AboutText,
 				FontSize = 14,
 				HorizontalOptions = LayoutOptions.Center,
 				VerticalOptions = LayoutOptions.Center
@@ -42,7 +42,7 @@ namespace BikeFinder
 
 			disclaimer = new Label {
 				WidthRequest = DeviceDetails.Width - 80,
-				Text = "BicycleFinder is an independently created app which uses information from the citybik.es api. Although every effort has been made to ensure reliability, bike station details and the number of available bikes cannot be guaranteed.",
+				Text = Constants.DisclaimerText,
 				FontSize = 12,
 				HorizontalOptions = LayoutOptions.Center,
 				VerticalOptions = LayoutOptions.Center

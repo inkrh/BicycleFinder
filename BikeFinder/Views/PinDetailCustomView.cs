@@ -40,7 +40,7 @@ namespace BikeFinder
 					cityTitle.Text = value.name;
 				}
 				if (null != cityDetails) {
-					cityDetails.Text = value.bikes + " available\n" + value.free + " free slots\n" +
+					cityDetails.Text = value.bikes + Constants.Available + value.free + Constants.Free +
 					(value.lat / 1E6).ToString () + " : " + (value.lng / 1E6).ToString ();
 				}
 			}
@@ -51,7 +51,7 @@ namespace BikeFinder
 
 			title = new Label {
 				WidthRequest = DeviceDetails.Width - 80,
-				Text = "Bike Station Details",
+				Text = Constants.BikeStation,
 				FontSize = 16,
 				FontAttributes = FontAttributes.Bold,
 				HorizontalOptions = LayoutOptions.Center,

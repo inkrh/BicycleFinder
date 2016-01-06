@@ -50,9 +50,7 @@ namespace BikeFinder
 		public void ClearPins (Map map)
 		{
 			map.Pins.Clear ();
-			if (null != PinCityDictionary) {
-				PinCityDictionary = new Dictionary<Pin, City> ();
-			}
+			PinCityDictionary = new Dictionary<Pin, City> ();
 		}
 
 		public void DropPin (Map map, double lat, double lon, City city)
@@ -66,8 +64,10 @@ namespace BikeFinder
 				Type = PinType.Place,
 				Position = position,
 				Label = city.name,
-				Address = "Available : " + city.bikes
+				Address = Constants.PinAvailable + city.bikes
 			};
+
+			city.Distance = Math.Abs (((city.lat / 1E6) - LocationHandler.Instance.CurrentLocation.Latitude) + ((city.lng / 1E6) - LocationHandler.Instance.CurrentLocation.Longitude));
 
 			if (map != null) {
 				map.Pins.Add (pin);
@@ -80,99 +80,66 @@ namespace BikeFinder
 			pin.Clicked += MapTo;
 		}
 
+
 		void MapTo (object sender, EventArgs e)
 		{
 			MessagingCenter.Send<string,City> ("mapPin", "PIN", PinCityDictionary [sender as Pin]);
 		}
 
-		public double DistanceTo (double lat1, double lon1, double lat2, double lon2, char unit = 'C')
-		{
-			double rlat1 = Math.PI * lat1 / 180;
-			double rlat2 = Math.PI * lat2 / 180;
-			double theta = lon1 - lon2;
-			double rtheta = Math.PI * theta / 180;
-			double dist = 
-				Math.Sin (rlat1) * Math.Sin (rlat2) + Math.Cos (rlat1) *
-				Math.Cos (rlat2) * Math.Cos (rtheta);
-			dist = Math.Acos (dist);
-			dist = dist * 180 / Math.PI;
-			dist = dist * 60 * 1.1515;
-
-			switch (unit) {
-			case 'K': //Kilometers
-				return dist * 1.609344;
-			case 'N': //Nautical Miles 
-				return dist * 0.8684;
-			case 'M': //Miles
-				return dist;
-			case 'C': //Custom
-				return dist * 0.75;
-			}
-
-			return dist;
-		}
-
-		public Dictionary<Pin, double> PinDistanceDictionary;
-
 		public Pin ClosestPin { get; set; }
 
 		public MapSpan CalculateBoundingCoordinates (Network chosen, Map thismap)
 		{
-			var region = thismap.VisibleRegion;
-			if (region == null) {
-				region = MapSpan.FromCenterAndRadius (new Position (chosen.lat, chosen.lng), Distance.FromMeters (chosen.radius));
-			}
+			
+			ClosestPin = PinCityDictionary.OrderBy (x => x.Value.Distance).First ().Key;
 
-			var center = region.Center;
-			var halfheightDegrees = region.LatitudeDegrees / 2;
-			var halfwidthDegrees = region.LongitudeDegrees / 2;
-
-			var left = center.Longitude - halfwidthDegrees;
-			var right = center.Longitude + halfwidthDegrees;
-			var top = center.Latitude + halfheightDegrees;
-			var bottom = center.Latitude - halfheightDegrees;
-
-			if (left < -180)
-				left = 180 + (180 + left);
-			if (right > 180)
-				right = (right - 180) - 180;
-
-
-
-			if (LocationHandler.Instance.CurrentLocation == new Position (0, 0)) {
-				LocationHandler.Instance.CurrentLocation = new Position (chosen.lat, chosen.lng);
-				LocationHandler.Instance.LBS = false;
-			}
-
-			if (LocationHandler.Instance.LBS) {
-				var l1 = LocationHandler.Instance.CurrentLocation.Latitude;
-				var lo1 = LocationHandler.Instance.CurrentLocation.Longitude;
-
-				PinDistanceDictionary = new Dictionary<Pin,double> ();
-
-				foreach (var i in thismap.Pins) {
-					var l2 = i.Position.Latitude;
-					var lo2 = i.Position.Longitude;
-					var td = MapHandler.Instance.DistanceTo (l1, lo1, l2, lo2);
-					if (PinDistanceDictionary.ContainsKey (i)) {
-						PinDistanceDictionary [i] = td;
-					} else {
-						PinDistanceDictionary.Add (i, td);
-					}
-					Debug.WriteLine (i.Label);
-				}
-
-				var closest = PinDistanceDictionary.OrderBy (x => x.Value).First ().Key;
-				ClosestPin = closest;
 		
-				var redoCenter = new Position ((closest.Position.Latitude + l1) / 2, (closest.Position.Longitude + lo1) / 2);
-				var redoMapSpan = MapSpan.FromCenterAndRadius (redoCenter, 
-					                  Distance.FromMiles (PinDistanceDictionary [closest] * 1.3));
-				return redoMapSpan;
+			var redoCenter = new Position ((ClosestPin.Position.Latitude + LocationHandler.Instance.CurrentLocation.Latitude) / 2, 
+				                 (ClosestPin.Position.Longitude + LocationHandler.Instance.CurrentLocation.Longitude) / 2);
 
-			} else {
-				return MapSpan.FromCenterAndRadius (LocationHandler.Instance.CurrentLocation, Distance.FromMeters (chosen.radius / 6)); 
-			}
+			var redoRadius = distance (ClosestPin.Position, LocationHandler.Instance.CurrentLocation);
+
+			var redoMapSpan = MapSpan.FromCenterAndRadius (redoCenter, redoRadius);
+			 
+
+			return redoMapSpan;
+
+		}
+
+
+		//from http://www.geodatasource.com
+		private Distance distance (Position p1, Position p2)
+		{
+			double lat1 = p1.Latitude;
+			double lon1 = p1.Longitude;
+			double lat2 = p2.Latitude;
+			double lon2 = p2.Longitude;
+
+			double theta = lon1 - lon2;
+			double dist = Math.Sin (deg2rad (lat1)) * Math.Sin (deg2rad (lat2)) + Math.Cos (deg2rad (lat1)) * Math.Cos (deg2rad (lat2)) * Math.Cos (deg2rad (theta));
+			dist = Math.Acos (dist);
+			dist = rad2deg (dist);
+			dist = dist * 60 * 1.1515;
+			dist = dist * 0.8684;
+			//weighting for optimal display
+			dist = dist /1.6;
+			return Distance.FromMiles(dist);
+		}
+
+		//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+		//::  This function converts decimal degrees to radians             :::
+		//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+		private double deg2rad (double deg)
+		{
+			return (deg * Math.PI / 180.0);
+		}
+
+		//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+		//::  This function converts radians to decimal degrees             :::
+		//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+		private double rad2deg (double rad)
+		{
+			return (rad / Math.PI * 180.0);
 		}
 
 	}
