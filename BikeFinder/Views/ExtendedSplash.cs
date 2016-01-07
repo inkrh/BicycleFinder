@@ -32,12 +32,14 @@ namespace BikeFinder
 
 		async void tryLocation ()
 		{
-			//try location twice (bug on some devices/OS versions causes first location attempt to fail)
+			//try location multiple times (bug on some devices/OS versions causes first location attempts to fail)
 			status.Text = Constants.TryingLocation;
+			await LocationHandler.Instance.GetLocation ();
 			if (await LocationHandler.Instance.GetLocation ()) {
 				updateLocationStatus ();
 			} else {
 				status.Text = Constants.LocationFailed;
+				await Task.Delay (2500);
 				if (await LocationHandler.Instance.GetLocation ()) {
 					updateLocationStatus ();
 				} 

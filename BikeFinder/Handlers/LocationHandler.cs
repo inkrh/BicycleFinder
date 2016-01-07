@@ -1,9 +1,8 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Plugin.Geolocator;
 using Xamarin.Forms.Maps;
+using System.Diagnostics;
+using System;
 
 namespace BikeFinder
 {
@@ -30,6 +29,7 @@ namespace BikeFinder
 
 		public async Task<bool> GetLocation ()
 		{
+			try {
 			CrossGeolocator.Current.DesiredAccuracy = 50;
 			if (!CrossGeolocator.Current.IsGeolocationAvailable || !CrossGeolocator.Current.IsGeolocationEnabled) {
 				LBS = false;
@@ -37,6 +37,10 @@ namespace BikeFinder
 				var location = await CrossGeolocator.Current.GetPositionAsync (5000);
 				CurrentLocation = new Position (location.Latitude, location.Longitude);
 				LBS = true;
+			}
+			} catch (Exception e) {
+				LBS = false;
+				Debug.WriteLine (e.Message);
 			}
 			return LBS;
 		}
