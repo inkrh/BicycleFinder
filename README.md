@@ -16,6 +16,6 @@ Current Issues:
   no WP version - will come after I do the Android side
 
 
-  no clustering - the "take off your glasses and squint a little if you want to see multiple pins mix into one" method is currently used, cf. efficieny comment above
+  no clustering - the "take off your glasses and squint a little if you want to see multiple pins mix into one" method is currently used, cf. efficiency comment above
 
 
