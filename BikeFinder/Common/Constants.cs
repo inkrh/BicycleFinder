@@ -37,7 +37,7 @@
 		public const string Free = " free slots\n";
 		public const string BikeStation = "Bike Station Details";
 		public const string Title = "BicycleFinder";
-		public const string AboutText = "BicycleFinder provides information on public bike stations around the world. \n\nIt uses the user's location if available to show the nearest bike stations. If no location information is available, or if there is no city bike network near you, BicycleFinder still allows you to choose from available cities in the city bikes network.\n\nUsers can find routes to their chosen bike station using the iOS map feature.";
+		public const string AboutText = "BicycleFinder provides information on public bike stations around the world. \n\nThe user's location is used solely to show the nearest bike stations when available.";
 		public const string DisclaimerText = "BicycleFinder is an independently created app which uses information from the citybik.es api. Although every effort has been made to ensure reliability, bike station details and the number of available bikes cannot be guaranteed.";
 	}
 }

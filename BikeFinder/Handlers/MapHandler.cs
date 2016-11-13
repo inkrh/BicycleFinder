@@ -90,9 +90,15 @@ namespace BikeFinder
 
 		public MapSpan CalculateBoundingCoordinates (Network chosen, Map thismap)
 		{
-			
-			ClosestPin = PinCityDictionary.OrderBy (x => x.Value.Distance).First ().Key;
 
+			//expand outwards to 2nd closest pin
+			if (PinCityDictionary.Count > 1)
+			{
+				ClosestPin = PinCityDictionary.OrderBy(x => x.Value.Distance).ToList()[1].Key;
+			}
+			else {
+				ClosestPin = PinCityDictionary.OrderBy(x => x.Value.Distance).First().Key;
+			}
 		
 			var redoCenter = new Position ((ClosestPin.Position.Latitude + LocationHandler.Instance.CurrentLocation.Latitude) / 2, 
 				                 (ClosestPin.Position.Longitude + LocationHandler.Instance.CurrentLocation.Longitude) / 2);

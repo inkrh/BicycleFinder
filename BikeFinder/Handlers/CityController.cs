@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -28,8 +29,13 @@ namespace BikeFinder
 			var result = await GetResponse (url);
 			if (result.StatusCode != HttpStatusCode.OK)
 				return null;
-			
+
+
 			Cities.Instance.CityData = Deserialize (result.Content.ReadAsStringAsync ().Result);
+			foreach (var i in Cities.Instance.CityData)
+			{
+				Debug.WriteLine(i.name);
+			}
 			return Cities.Instance.CityData;
 		}
 
@@ -39,6 +45,7 @@ namespace BikeFinder
 			var httpClient = new HttpClient ();
 			HttpRequestMessage request = new HttpRequestMessage (HttpMethod.Get, url);
 			var response = await httpClient.SendAsync (request);
+			Debug.WriteLine(response);
 			return response;
 		}
 

@@ -33,8 +33,14 @@ namespace BikeFinder
 				if (result.StatusCode != HttpStatusCode.OK) {
 					return null;
 				}
-				var list = Deserialize (result.Content.ReadAsStringAsync ().Result);
+				var r = result.Content.ReadAsStringAsync().Result;
+				Debug.WriteLine(r);
+				var list = Deserialize (r);
 				list.Sort ((x, y) => x.city.CompareTo (y.city));
+				foreach (var i in list)
+				{
+					Debug.WriteLine(i.name);
+				}
 				return list;
 			} catch {
 				return null;
@@ -47,6 +53,7 @@ namespace BikeFinder
 				var httpClient = new HttpClient ();
 				var request = new HttpRequestMessage (HttpMethod.Get, url);
 				var response = await httpClient.SendAsync (request);
+				Debug.WriteLine(response);
 				return response;
 			} catch {
 				return null;

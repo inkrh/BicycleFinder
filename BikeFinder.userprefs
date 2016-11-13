@@ -1,6 +1,7 @@
-﻿<Properties StartupItem="iOS/BikeFinder.iOS.csproj" RefactoringSettings.EnableRefactorings="True">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.Robert's iPhone" />
+﻿<Properties RefactoringSettings.EnableRefactorings="True" StartupConfiguration="{E3D1A1DC-4078-4F23-8335-6AF5CEE47373}|Default">
   <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.BikeFinder.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.B3ADBA7F-016F-48CF-B4D1-664D729C142B" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

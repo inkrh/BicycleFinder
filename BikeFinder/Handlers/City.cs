@@ -20,7 +20,7 @@ namespace BikeFinder
 
 		public int free { get; set; }
 
-		public int number { get; set; }
+		public string number { get; set; }
 
 		public double Distance {get;set;}
 	}

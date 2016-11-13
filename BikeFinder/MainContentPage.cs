@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Threading.Tasks;
 using Plugin.Connectivity;
@@ -235,6 +236,7 @@ namespace BikeFinder
 			cityListStackLayout.IsVisible = false;
 
 			Networks.Instance.CurrentNetwork = chosen;
+
 			if (!LocationHandler.Instance.LBS || Networks.Instance.CurrentNetwork != Networks.Instance.ClosestNetwork) {
 				LocationHandler.Instance.CurrentLocation = new Position (Networks.Instance.CurrentNetwork.lat / 1E6,
 					Networks.Instance.CurrentNetwork.lng / 1E6);
@@ -283,16 +285,18 @@ namespace BikeFinder
 				map.MoveToRegion (MapHandler.Instance.GetMap (chosen));
 
 				var a = await CityController.Instance.GetCityData (chosen.url);
+				Debug.WriteLine(chosen.url);
 				if (a != null) {
 					foreach (var c in Cities.Instance.CityData) {
 						MapHandler.Instance.DropPin (map, c.lat / 1E6, c.lng / 1E6, c);
+						Debug.WriteLine("Placing " + c.name);
 					}
 				}
 
 				map.MoveToRegion (MapHandler.Instance.CalculateBoundingCoordinates (chosen, map));
 
-			} catch {
-
+			} catch (Exception ex) {
+				Debug.WriteLine(ex.Message);
 			}
 
 

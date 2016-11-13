@@ -7,9 +7,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.inkrh.bikefinder</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2</string>
+	<string>1.4</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>1.1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MinimumOSVersion</key>
@@ -51,6 +51,7 @@
 		<string>Icon-Small</string>
 		<string>Icon-Small@2x</string>
 		<string>Icon-Small@3x</string>
+		<string>Icon-167</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -60,5 +61,7 @@
 	<string>Tell us your location to provide the closest city and bike station.</string>
 	<key>UIRequiresFullScreen</key>
 	<string>YES</string>
+	<key>CFBundleName</key>
+	<string>BicycleFinder</string>
 </dict>
 </plist>
