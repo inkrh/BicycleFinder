@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System;
 using System.Linq;
+using Xamarin.Forms.Maps;
 
 namespace BikeFinder
 {
@@ -30,6 +31,8 @@ namespace BikeFinder
 				if (DistanceNetworks != null) {
 					var distance = DistanceNetworks.Keys.ToList ();
 					distance.Sort ();
+                    Debug.WriteLine(distance[0]);
+                    Debug.WriteLine(DistanceNetworks[distance[0]].city);
 					return DistanceNetworks [distance [0]];
 				}
 				return null;
@@ -53,8 +56,13 @@ namespace BikeFinder
 			}
 			try{
 			foreach (var network in NetworkList) {
-				var n = Math.Abs (((network.lat / 1E6) - LocationHandler.Instance.CurrentLocation.Latitude) + ((network.lng / 1E6) - LocationHandler.Instance.CurrentLocation.Longitude));
-				if (DistanceNetworks.ContainsKey (n)) {
+                    var sd = new Common.Coordinates(network.lat / 1E6, network.lng / 1E6);
+                    var td = new Common.Coordinates(LocationHandler.Instance.CurrentLocation.Latitude, LocationHandler.Instance.CurrentLocation.Longitude);
+                    var n = Common.DistanceBetween.DistanceTo(sd, td,Common.UnitOfLength.Kilometers);
+				//var n = Math.Abs (((network.lat / 1E6) - LocationHandler.Instance.CurrentLocation.Latitude) + ((network.lng / 1E6) - LocationHandler.Instance.CurrentLocation.Longitude));
+                    Debug.WriteLine(network.city + " " + n.ToString());
+
+                    if (DistanceNetworks.ContainsKey (n)) {
 					DistanceNetworks [n] = network;
 				} else {
 					DistanceNetworks.Add (n, network);

@@ -1,9 +1,17 @@
 ﻿<Properties RefactoringSettings.EnableRefactorings="True" StartupConfiguration="{E3D1A1DC-4078-4F23-8335-6AF5CEE47373}|Default">
-  <MonoDevelop.Ide.Workbench />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.BikeFinder.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.B3ADBA7F-016F-48CF-B4D1-664D729C142B" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Bicyclefinder Status">
+    <Files>
+      <File FileName="BikeFinder/MainContentPage.cs" Line="228" Column="47" />
+      <File FileName="BikeFinder/Handlers/Networks.cs" Line="63" Column="1" />
+      <File FileName="BikeFinder/Common/DistanceBetween.cs" Line="54" Column="3" />
+      <File FileName="Bicyclefinder Status" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" />
+  <MonoDevelop.Ide.ItemProperties.BikeFinder.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.ce753032f25156084cfb1380142cc1c7d4102cab" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
 </Properties>
