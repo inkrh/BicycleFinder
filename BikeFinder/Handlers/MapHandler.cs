@@ -34,6 +34,7 @@ namespace BikeFinder
 		{
 			
 			try {
+                
 				var span = MapSpan.FromCenterAndRadius (new Position (chosen.lat / 1E6, 
 					           chosen.lng / 1E6), 
 					           Distance.FromMeters (chosen.radius));

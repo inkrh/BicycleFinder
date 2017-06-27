@@ -218,17 +218,30 @@ namespace BikeFinder
 
 		}
 
-		async void Init ()
-		{
+        async void Init()
+        {
 
-			if (null == Networks.Instance.NetworkList) {
-				await Networks.Instance.GetNetworks ();
-			}
-
-			await Networks.Instance.CalculateNetworkDistance ();
-			CityChosen (Networks.Instance.ClosestNetwork);
-			map.IsShowingUser = LocationHandler.Instance.LBS;
-			PopulateTable ();
+            if (null == Networks.Instance.NetworkList)
+            {
+                await Networks.Instance.GetNetworks();
+            }
+            if (null != Networks.Instance.NetworkList)
+            {
+                await Networks.Instance.CalculateNetworkDistance();
+                CityChosen(Networks.Instance.ClosestNetwork);
+                map.IsShowingUser = LocationHandler.Instance.LBS;
+                PopulateTable();
+            }
+            else
+            {
+                if (await MessageBox("No connection to the citybik.es server. Please check your data connection.", "Network error", "Retry", "Cancel") == "Retry")
+                {
+                    Init();
+                } else {
+                    await MessageBox("Bike networks will not show. Please check your data connection and relaunch later", "Network error", "Ok",null);
+                }
+            }
+        
 
 		}
 

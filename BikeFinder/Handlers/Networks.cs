@@ -46,7 +46,7 @@ namespace BikeFinder
 		public async Task<bool> GetNetworks ()
 		{
 			NetworkList = await NetworksController.Instance.GetNetworks ();
-			return NetworkList.Count >= 1;
+			return NetworkList !=null && NetworkList.Count >= 1;
 		}
 
 		public async Task<bool> CalculateNetworkDistance ()

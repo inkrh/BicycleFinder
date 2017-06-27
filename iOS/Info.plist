@@ -7,13 +7,13 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.inkrh.bikefinder</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.4</string>
+	<string>1.5</string>
 	<key>CFBundleVersion</key>
-	<string>1.1</string>
+	<string>1.5</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MinimumOSVersion</key>
-	<string>9.1</string>
+	<string>9.3</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
@@ -55,13 +55,13 @@
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Tell us your location to provide the closest city and bike station.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Tell us your location to provide the closest city and bike station.</string>
+	<string>We use your location to provide the closest city and bike station.</string>
 	<key>UIRequiresFullScreen</key>
 	<string>YES</string>
 	<key>CFBundleName</key>
 	<string>BicycleFinder</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>New Entry</string>
 </dict>
 </plist>
