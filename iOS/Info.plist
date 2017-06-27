@@ -7,9 +7,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.inkrh.bikefinder</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.5</string>
-	<key>CFBundleVersion</key>
-	<string>1.5</string>
+	<string>1.6</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MinimumOSVersion</key>
@@ -63,5 +61,7 @@
 	<string>BicycleFinder</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>New Entry</string>
+	<key>CFBundleVersion</key>
+	<string>2017.06</string>
 </dict>
 </plist>
